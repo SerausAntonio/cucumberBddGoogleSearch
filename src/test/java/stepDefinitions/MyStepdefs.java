@@ -7,6 +7,7 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -26,16 +27,20 @@ public class MyStepdefs {
 
     @When("I search for {string}")
     public void iSearchFor(String searchTxt) {
-   //     wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='Alles accepteren']"))).click();
-       driver.findElement(By.xpath("//*[text()='Alles accepteren']")).click();
-      //  wait.until(ExpectedConditions.elementToBeClickable(By.name("q"))).sendKeys(searchTxt);
-        driver.findElement((By.name("q"))).sendKeys(searchTxt);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[text()='Alles accepteren']"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("q"))).sendKeys(searchTxt);
         driver.findElement((By.name("q"))).sendKeys(Keys.RETURN);
     }
 
     @Then("the page title should start with {string}")
-    public void thePageTitleShouldStartWith(String searchTxt) {
+    public void thePageTitleShouldStartWith(String titleStartsWith) {
         String title = driver.getTitle().toLowerCase();
-        Assert.assertTrue(title.startsWith(searchTxt));
+     //   Assert.assertTrue(title.startsWith(titleStartsWith));
+        new WebDriverWait(driver,Duration.ofSeconds(15)).until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                return d.getTitle().toLowerCase().startsWith(titleStartsWith);
+            }
+        });
+
     }
 }
